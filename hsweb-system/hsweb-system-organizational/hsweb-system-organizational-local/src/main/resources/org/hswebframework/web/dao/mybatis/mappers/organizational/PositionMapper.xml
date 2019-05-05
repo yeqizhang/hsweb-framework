@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ~ Copyright 2016 http://www.hswebframework.org
+  ~ Copyright 2019 http://www.hswebframework.org
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -43,7 +43,8 @@
     </insert>
 
     <delete id="deleteByPk" parameterType="String">
-        delete from s_position where u_id =#{id}
+        <include refid="config"/> <include refid="BasicMapper.switcher"/>
+        delete from ${_fullTableName} where u_id =#{id}
     </delete>
 
     <delete id="delete" parameterType="org.hswebframework.web.commons.entity.Entity">

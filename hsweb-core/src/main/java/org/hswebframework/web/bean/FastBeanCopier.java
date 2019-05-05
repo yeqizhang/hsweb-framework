@@ -37,13 +37,7 @@ public final class FastBeanCopier {
     @SuppressWarnings("all")
     public static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
 
-    private static BeanFactory BEAN_FACTORY = new BeanFactory() {
-        @Override
-        @SneakyThrows
-        public <T> T newInstance(Class<T> beanType) {
-            return beanType == Map.class ? (T) new HashMap<>() : beanType.newInstance();
-        }
-    };
+    private static BeanFactory BEAN_FACTORY;
 
     public static final DefaultConverter DEFAULT_CONVERT;
 
@@ -100,7 +94,7 @@ public final class FastBeanCopier {
     }
 
     public static <T, S> T copy(S source, T target, Converter converter, String... ignore) {
-        return copy(source, target, converter, (ignore == null || ignore.length == 0) ? Collections.emptySet() : new HashSet<>(Arrays.asList(ignore)));
+        return copy(source, target, converter, (ignore == null || ignore.length == 0) ? new java.util.HashSet<>() : new HashSet<>(Arrays.asList(ignore)));
     }
 
     public static <T, S> T copy(S source, T target, Set<String> ignore) {
@@ -137,7 +131,7 @@ public final class FastBeanCopier {
 
     public static Copier createCopier(Class source, Class target) {
         String sourceName = source.getName();
-        String tartName = source.getName();
+        String tartName = target.getName();
         if (sourceName.startsWith("package ")) {
             sourceName = sourceName.substring("package ".length());
         }
@@ -468,11 +462,11 @@ public final class FastBeanCopier {
         public Collection newCollection(Class targetClass) {
 
             if (targetClass == List.class) {
-                return new ArrayList();
+                return new ArrayList<>();
             } else if (targetClass == Set.class) {
-                return new HashSet();
+                return new HashSet<>();
             } else if (targetClass == Queue.class) {
-                return new LinkedList();
+                return new LinkedList<>();
             } else {
                 try {
                     return (Collection) targetClass.newInstance();

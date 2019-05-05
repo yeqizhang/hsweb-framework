@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -18,13 +18,22 @@
 
 package org.hswebframework.web.starter;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.List;
 
 /**
  * @author zhouhao
  */
 @ConfigurationProperties(prefix = "hsweb.app")
+@Getter
+@Setter
 public class AppProperties {
+    private boolean      autoInit = true;
+    private List<String> initTableExcludes;
+
     private String name;
     private String comment;
     private String website;
@@ -37,37 +46,5 @@ public class AppProperties {
         systemVersion.setWebsite(website);
         systemVersion.setVersion(version);
         return systemVersion;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 }

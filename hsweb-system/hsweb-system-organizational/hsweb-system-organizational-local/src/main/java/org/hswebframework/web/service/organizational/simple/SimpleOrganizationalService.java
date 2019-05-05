@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016 http://www.hswebframework.org
+ *  Copyright 2019 http://www.hswebframework.org
  *  
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public class SimpleOrganizationalService extends EnableCacheAllEvictTreeSortServ
 
     @Override
     @CacheEvict(allEntries = true)
-    public int deleteByPk(String id) {
+    public OrganizationalEntity deleteByPk(String id) {
         if (DefaultDSLQueryService.createQuery(departmentDao)
                 .where(DepartmentEntity.orgId, id)
                 .total() > 0) {

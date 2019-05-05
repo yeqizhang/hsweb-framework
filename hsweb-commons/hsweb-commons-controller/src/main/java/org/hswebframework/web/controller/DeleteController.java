@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 http://www.hswebframework.org
+ * Copyright 2019 http://www.hswebframework.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,15 +35,15 @@ import static org.hswebframework.web.controller.message.ResponseMessage.ok;
  *
  * @author zhouhao
  */
-public interface DeleteController<PK> {
+public interface DeleteController<E,PK> {
 
     @Authorize(ignore = true)
-    DeleteService<PK> getService();
+    DeleteService<E,PK> getService();
 
     @Authorize(action = Permission.ACTION_DELETE)
     @DeleteMapping(path = "/{id:.+}")
     @ApiOperation("删除数据")
-    default ResponseMessage deleteByPrimaryKey(@PathVariable PK id) {
+    default ResponseMessage<E> deleteByPrimaryKey(@PathVariable PK id) {
         return ok(getService().deleteByPk(id));
     }
 

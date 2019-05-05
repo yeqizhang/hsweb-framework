@@ -5,10 +5,11 @@
     <parent>
         <artifactId>hsweb-system</artifactId>
         <groupId>org.hswebframework.web</groupId>
-        <version>3.0.0-RC-SNAPSHOT</version>
+        <version>3.0.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <description>业务模块-权限管理</description>
     <artifactId>hsweb-system-authorization</artifactId>
     <packaging>pom</packaging>
     <modules>

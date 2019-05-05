@@ -15,7 +15,9 @@ import org.hswebframework.web.id.IDGenerator;
 import org.hswebframework.web.service.AbstractService;
 import org.hswebframework.web.service.DefaultDSLQueryService;
 import org.hswebframework.web.service.authorization.events.ClearUserAuthorizationCacheEvent;
+import org.hswebframework.web.service.authorization.events.UserCreatedEvent;
 import org.hswebframework.web.service.authorization.events.UserModifiedEvent;
+import org.hswebframework.web.service.authorization.simple.terms.UserInRoleSqlTerm;
 import org.hswebframework.web.validate.ValidationException;
 import org.hswebframework.utils.ListUtils;
 import org.hswebframework.web.validator.group.CreateGroup;
@@ -25,6 +27,7 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -75,10 +78,14 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
         return entityFactory.newInstance(BindRoleUserEntity.class);
     }
 
+    protected IDGenerator<String> getIdGenerator() {
+        return IDGenerator.MD5;
+    }
+
     @Override
     @Transactional(readOnly = true)
     public UserEntity selectByUsername(String username) {
-        if (null == username) {
+        if (!StringUtils.hasLength(username)) {
             return null;
         }
         return createQuery().where("username", username).single();
@@ -87,8 +94,8 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
     @Override
     @Transactional(readOnly = true)
     public UserEntity selectByUserNameAndPassword(String plainUsername, String plainPassword) {
-        Objects.requireNonNull(plainUsername);
-        Objects.requireNonNull(plainPassword);
+        Assert.hasLength(plainUsername, "用户名不能为空");
+        Assert.hasLength(plainPassword, "密码不能为空");
 
         return Optional.ofNullable(selectByUsername(plainUsername))
                 .filter(user -> encodePassword(plainPassword, user.getSalt()).equals(user.getPassword()))
@@ -98,7 +105,7 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
     @Override
     @Transactional(readOnly = true)
     public UserEntity selectByPk(String id) {
-        if (null == id) {
+        if (!StringUtils.hasLength(id)) {
             return null;
         }
         UserEntity userEntity = createQuery().where(UserEntity.id, id).single();
@@ -130,11 +137,11 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
         //用户名合法性验证
         tryValidateProperty(usernameValidator, UserEntity.username, userEntity.getUsername());
         //判断用户是否已经存在
-        tryValidateProperty(null == selectByUsername(userEntity.getUsername()), UserEntity.username, "{username_exists}");
+        tryValidateProperty(null == selectByUsername(userEntity.getUsername()), UserEntity.username, "用户名已存在");
         //密码强度验证
         tryValidateProperty(passwordStrengthValidator, UserEntity.password, userEntity.getPassword());
         userEntity.setCreateTime(System.currentTimeMillis());
-        userEntity.setId(IDGenerator.MD5.generate());
+        userEntity.setId(getIdGenerator().generate());
         userEntity.setSalt(IDGenerator.RANDOM.generate());
         userEntity.setStatus(DataStatus.STATUS_ENABLED);
         //验证其他属性
@@ -150,6 +157,7 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
                 trySyncUserRole(userEntity.getId(), bindRoleUserEntity.getRoles());
             }
         }
+        publisher.publishEvent(new UserCreatedEvent(userEntity));
         return userEntity.getId();
     }
 
@@ -167,9 +175,6 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
     @Override
     @Caching(evict = {
             @CacheEvict(value = CacheConstants.USER_CACHE_NAME, key = "#userId")
-//           , @CacheEvict(value = CacheConstants.USER_AUTH_CACHE_NAME, key = "#userId"),
-//            @CacheEvict(value = CacheConstants.USER_AUTH_CACHE_NAME, key = "'user-menu-list:'+#userId"),
-//            @CacheEvict(value = CacheConstants.USER_AUTH_CACHE_NAME, key = "'menu-tree:'+#userId")
     })
     public void update(String userId, UserEntity userEntity) {
         userEntity.setId(userId);
@@ -217,6 +222,9 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
 
     @Override
     public boolean enable(String userId) {
+        if (!StringUtils.hasLength(userId)) {
+            return false;
+        }
         return createUpdate(getDao())
                 .set(UserEntity.status, DataStatus.STATUS_ENABLED)
                 .where(GenericEntity.id, userId)
@@ -225,6 +233,9 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
 
     @Override
     public boolean disable(String userId) {
+        if (!StringUtils.hasLength(userId)) {
+            return false;
+        }
         return createUpdate(getDao())
                 .set(UserEntity.status, DataStatus.STATUS_DISABLED)
                 .where(GenericEntity.id, userId)
@@ -252,7 +263,7 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
 
     @Override
     public List<RoleEntity> getUserRole(String userId) {
-        Objects.requireNonNull(userId);
+        Assert.hasLength(userId, "参数不能为空");
         List<UserRoleEntity> roleEntities = userRoleDao.selectByUserId(userId);
         if (roleEntities.isEmpty()) {
             return new ArrayList<>();
@@ -289,8 +300,9 @@ public class SimpleUserService extends AbstractService<UserEntity, String>
     @Override
     public List<UserEntity> selectByUserByRole(List<String> roleIdList) {
         if (CollectionUtils.isEmpty(roleIdList)) {
-            return Collections.emptyList();
+            return new java.util.ArrayList<>();
         }
+        // org.hswebframework.web.service.authorization.simple.terms.UserInRoleSqlTerm
         return createQuery()
                 .where("id", "user-in-role", roleIdList)
                 .listNoPaging();

@@ -13,8 +13,10 @@ import org.hswebframework.web.tests.SimpleWebApplicationTests;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Array;
 import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -44,10 +46,11 @@ public class SimpleDynamicFormServiceTest extends SimpleWebApplicationTests {
     private SqlExecutor        sqlExecutor;
 
     @Test
-    @Transactional
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void testDeploy() throws SQLException {
         DynamicFormEntity form = entityFactory.newInstance(DynamicFormEntity.class);
         form.setName("test");
+        form.setDatabaseName("PUBLIC");
         form.setDatabaseTableName("f_test");
         form.setTriggers("[" +
                 "{\"trigger\":\"select.wrapper.done\"" +//触发器 在每个查询结果被包装为对象时触发
@@ -65,7 +68,7 @@ public class SimpleDynamicFormServiceTest extends SimpleWebApplicationTests {
         column_name.setJavaType("string");
         column_name.setJdbcType(JDBCType.VARCHAR.getName());
         column_name.setLength(32);
-
+        column_name.setValidator(Arrays.asList("{\"type\":\"NotBlank\",\"groups\":[\"create\"],\"message\":\"姓名不能为空\"}"));
         DynamicFormColumnEntity column_age = entityFactory.newInstance(DynamicFormColumnEntity.class);
         column_age.setName("年龄");
         column_age.setColumnName("age");
@@ -92,7 +95,7 @@ public class SimpleDynamicFormServiceTest extends SimpleWebApplicationTests {
             }
         });
 
-        databaseRepository.getDefaultDatabase().getTable("s_dyn_form");
+        databaseRepository.getDefaultDatabase(form.getDatabaseName()).getTable("s_dyn_form");
 
         List<Object> objects = dynamicFormOperationService.select(form.getId(), new QueryParamEntity().includes("*", "form.*"));
 

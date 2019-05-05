@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2016 http://www.hswebframework.org
+  ~ Copyright 2019 http://www.hswebframework.org
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -22,17 +22,24 @@
     <parent>
         <artifactId>hsweb-concurrent-counter</artifactId>
         <groupId>org.hswebframework.web</groupId>
-        <version>3.0.0-RC-SNAPSHOT</version>
+        <version>3.0.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hsweb-concurrent-counter-api</artifactId>
 
+    <description>计数器API以及本地实现</description>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>20.0</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

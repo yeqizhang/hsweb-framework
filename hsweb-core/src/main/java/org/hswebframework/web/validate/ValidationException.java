@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class ValidationException extends BusinessException {
 
     public List<ValidateResults.Result> getResults() {
         if (results == null) {
-            return Collections.emptyList();
+            return new java.util.ArrayList<>();
         }
         return results.getResults();
     }

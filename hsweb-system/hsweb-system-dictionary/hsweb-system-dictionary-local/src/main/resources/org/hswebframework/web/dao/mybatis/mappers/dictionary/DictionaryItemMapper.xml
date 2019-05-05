@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ~ Copyright 2016 http://www.hswebframework.org
+  ~ Copyright 2019 http://www.hswebframework.org
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -32,10 +32,8 @@
         <result property="path" column="path" javaType="String" jdbcType="VARCHAR"/>
         <result property="searchCode" column="search_code" javaType="String" jdbcType="VARCHAR"/>
         <result property="sortIndex" column="sort_index" javaType="Long" jdbcType="DECIMAL"/>
-        <result property="level" column="level" javaType="Long" jdbcType="DECIMAL"/>
-        <result property="properties" column="properties" javaType="Map" jdbcType="CLOB"/>
-        <result property="valueExpression" column="value_expression" javaType="String" jdbcType="CLOB"/>
-        <result property="textExpression" column="text_expression" javaType="String" jdbcType="CLOB"/>
+        <result property="level" column="level_" javaType="Integer" jdbcType="DECIMAL"/>
+        <result property="ordinal" column="ordinal" javaType="Integer" jdbcType="DECIMAL"/>
         <result property="properties" column="properties" javaType="Map" jdbcType="CLOB"/>
     </resultMap>
 
@@ -51,7 +49,8 @@
     </insert>
 
     <delete id="deleteByPk" parameterType="String">
-        delete from s_dict_item where u_id =#{id}
+        <include refid="config"/> <include refid="BasicMapper.switcher"/>
+        delete from ${_fullTableName} where u_id =#{id}
     </delete>
 
     <delete id="delete" parameterType="org.hswebframework.web.commons.entity.Entity">

@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -42,8 +42,13 @@ public class InsertSqlBuilder extends SimpleInsertSqlRender {
 
     @Override
     protected SqlAppender getParamString(String prefix, String paramName, RDBColumnMetaData rdbColumnMetaData) {
+        String typeHandler = rdbColumnMetaData.getProperty("typeHandler")
+                .getValue();
+
         return new SqlAppender().add("#{", paramName,
                 ",javaType=", EasyOrmSqlBuilder.getJavaType(rdbColumnMetaData.getJavaType()),
-                ",jdbcType=", rdbColumnMetaData.getJdbcType(), "}");
+                ",jdbcType=", rdbColumnMetaData.getJdbcType(),
+                typeHandler != null ? ",typeHandler=" + typeHandler : "",
+                "}");
     }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016 http://www.hswebframework.org
+ *  Copyright 2019 http://www.hswebframework.org
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class SimplePermissionRoleModel implements PermissionRoleModel {
     @Override
     public List<String> getActions() {
         if (this.actions == null) {
-            return Collections.emptyList();
+            return new java.util.ArrayList<>();
         }
         return actions;
     }
@@ -61,7 +61,7 @@ public class SimplePermissionRoleModel implements PermissionRoleModel {
     @Override
     public List<DataAccessModel> getDataAccesses() {
         if (this.dataAccesses == null) {
-            return Collections.emptyList();
+            return new java.util.ArrayList<>();
         }
         return this.dataAccesses;
     }

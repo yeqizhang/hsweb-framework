@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016 http://www.hswebframework.org
+ *  Copyright 2019 http://www.hswebframework.org
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -88,8 +88,8 @@ public class SimpleOAuth2RequestService implements OAuth2RequestService {
     @Override
     @SuppressWarnings("unchecked")
     public void doEvent(String serverId, OAuth2Event event, Class<? extends OAuth2Event> eventType) {
-        listenerStore.getOrDefault(serverId, Collections.emptyMap())
-                .getOrDefault(eventType, Collections.emptyList())
+        listenerStore.getOrDefault(serverId, new java.util.HashMap<>())
+                .getOrDefault(eventType, new ArrayList<>())
                 .forEach(listener -> listener.on(event));
     }
 

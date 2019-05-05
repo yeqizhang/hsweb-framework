@@ -5,12 +5,13 @@
     <parent>
         <artifactId>hsweb-concurrent-counter</artifactId>
         <groupId>org.hswebframework.web</groupId>
-        <version>3.0.0-RC-SNAPSHOT</version>
+        <version>3.0.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hsweb-concurrent-counter-redis</artifactId>
 
+    <description>计数器redisson实现</description>
 
     <dependencies>
         <dependency>

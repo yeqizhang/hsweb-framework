@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package org.hswebframework.web.service;
 /**
  * @author zhouhao
  */
-public interface DefaultDeleteService<PK> extends DeleteService<PK> {
+public interface DefaultDeleteService<E,PK> extends DeleteService<E,PK> {
     /**
      * 根据主键删除记录
      *
@@ -29,5 +29,5 @@ public interface DefaultDeleteService<PK> extends DeleteService<PK> {
      * @return 影响记录数
      */
     @Override
-    int deleteByPk(PK pk);
+    E deleteByPk(PK pk);
 }

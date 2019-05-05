@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ /*
-  ~  * Copyright 2016 http://www.hswebframework.org
+  ~  * Copyright 2019 http://www.hswebframework.org
   ~  *
   ~  * Licensed under the Apache License, Version 2.0 (the "License");
   ~  * you may not use this file except in compliance with the License.
@@ -24,19 +24,17 @@
 
     <groupId>org.hswebframework.web</groupId>
     <artifactId>hsweb-framework</artifactId>
-    <version>3.0.0-RC-SNAPSHOT</version>
+    <version>3.0.8</version>
     <modules>
         <module>hsweb-starter</module>
         <module>hsweb-core</module>
         <module>hsweb-authorization</module>
-        <module>hsweb-message</module>
         <module>hsweb-system</module>
         <module>hsweb-tests</module>
         <module>hsweb-datasource</module>
         <module>hsweb-commons</module>
         <module>hsweb-logging</module>
         <module>hsweb-concurrent</module>
-        <module>hsweb-examples</module>
         <module>hsweb-boost</module>
         <module>hsweb-thirdparty</module>
     </modules>
@@ -45,6 +43,7 @@
 
     <name>hsweb framework</name>
     <url>http://www.hswebframework.org</url>
+    <inceptionYear>2016</inceptionYear>
     <description>hsweb (haʊs wɛb)
         是一个用于快速搭建企业后台管理系统的基础项目,集成一揽子便捷功能如:通用增删改查，在线代码生成，权限管理(可控制到列和行)，动态多数据源分布式事务，动态脚本，动态定时任务，在线数据库维护等等
     </description>
@@ -84,7 +83,7 @@
         <project.build.jdk>${java.version}</project.build.jdk>
 
 
-        <spring.boot.version>1.5.13.RELEASE</spring.boot.version>
+        <spring.boot.version>1.5.19.RELEASE</spring.boot.version>
 
         <javassist.version>3.20.0-GA</javassist.version>
         <activiti.version>5.19.0.2</activiti.version>
@@ -96,9 +95,9 @@
         <aspectj.version>1.6.12</aspectj.version>
         <hibernate.validator.version>5.1.1.Final</hibernate.validator.version>
 
-        <hsweb.ezorm.version>3.0.1-SNAPSHOT</hsweb.ezorm.version>
+        <hsweb.ezorm.version>3.0.5</hsweb.ezorm.version>
         <hsweb.utils.version>3.0.2</hsweb.utils.version>
-        <hsweb.expands.version>3.0.2-SNAPSHOT</hsweb.expands.version>
+        <hsweb.expands.version>3.0.2</hsweb.expands.version>
 
         <swagger.version>2.7.0</swagger.version>
     </properties>
@@ -117,6 +116,7 @@
                             <serverId>sonatype-releases</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <stagingProgressTimeoutMinutes>120</stagingProgressTimeoutMinutes>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -233,14 +233,42 @@
             </plugin>
 
             <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.6.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!--<goal>addSources</goal>-->
+                            <goal>addTestSources</goal>
+                            <!--<goal>generateStubs</goal>-->
+                            <goal>compile</goal>
+                            <!--<goal>generateTestStubs</goal>-->
+                            <goal>compileTests</goal>
+                            <!--<goal>removeStubs</goal>-->
+                            <!--<goal>removeTestStubs</goal>-->
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>2.4.15</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.17</version>
                 <configuration>
                     <includes>
-                        <include>
-                            **/org/hswebframework/**/*Tests.java
-                        </include>
+                        <include>**/*Test.java</include>
+                        <include>**/*Test.groovy</include>
+                        <include>**/*Tests.java</include>
+                        <include>**/*Test.groovy</include>
+                        <include>**/*Spec.java</include>
                     </includes>
                 </configuration>
             </plugin>
@@ -249,9 +277,15 @@
 
     <dependencies>
         <!--<dependency>-->
-            <!--<groupId>io.reactivex.rxjava2</groupId>-->
-            <!--<artifactId>rxjava</artifactId>-->
+        <!--<groupId>io.reactivex.rxjava2</groupId>-->
+        <!--<artifactId>rxjava</artifactId>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.15</version>
+            <type>pom</type>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -330,7 +364,7 @@
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson</artifactId>
-                <version>3.7.0</version>
+                <version>3.10.6</version>
             </dependency>
 
             <dependency>

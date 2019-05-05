@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * TODO 完成注释
- *
  * @author zhouhao
  */
 public class SimpleDependencyInstaller implements DependencyInstaller {
@@ -50,7 +48,7 @@ public class SimpleDependencyInstaller implements DependencyInstaller {
 
     public void doUnInstall(Map<String, Object> context) {
         if (unInstaller != null) {
-            installer.execute(context);
+            unInstaller.execute(context);
         }
     }
 
@@ -58,7 +56,7 @@ public class SimpleDependencyInstaller implements DependencyInstaller {
         SimpleDependencyUpgrader simpleDependencyUpgrader =
                 new SimpleDependencyUpgrader(installed, dependency, context);
         context.put("upgrader", simpleDependencyUpgrader);
-        if (unInstaller != null) {
+        if (upgrader != null) {
             upgrader.execute(context);
         }
     }

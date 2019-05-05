@@ -5,7 +5,9 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hswebframework.web.authorization.Authentication;
 import org.hswebframework.web.authorization.User;
+import org.hswebframework.web.commons.bean.ValidateBean;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,9 +21,11 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StartProcessRequest {
+@ToString
+public class StartProcessRequest implements ValidateBean {
+    private static final long serialVersionUID = -344629653235864995L;
     /**
-     * 流程定义KEY
+     * 流程定义ID
      *
      * @see ProcessDefinition#getId()
      */
@@ -52,17 +56,12 @@ public class StartProcessRequest {
     private String nextClaimUserId;
 
     /**
-     * 下一环节的ID,如果指定了此属性,则流程启动后自动跳转到该环节
-     */
-    private String nextActivityId;
-
-    /**
      * 流程变量
      */
-    private Map<String, Object> variables;
+    private Map<String, Object> variables = new HashMap<>();
 
     /**
      * 表单数据
      */
-    private Map<String, Object> formData;
+    private Map<String, Object> formData = new HashMap<>();
 }

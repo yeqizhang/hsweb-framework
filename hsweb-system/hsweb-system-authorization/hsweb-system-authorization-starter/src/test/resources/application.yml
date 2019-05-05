@@ -12,8 +12,16 @@ hsweb:
       name: 权限管理测试
       version: 3.0.0
     authorize:
-      sync: true
-      auto-parse: true
+      sync: false
+      auto-parse: false
+      two-factor:
+        totp:
+          enable: true
+    users:
+      fix-bug-91-in-yml:
+        username: "fix-bug-91-in-yml"
+        password: "fix-bug-91-in-yml"
+
 logging:
   level:
     org.springframework: WARN

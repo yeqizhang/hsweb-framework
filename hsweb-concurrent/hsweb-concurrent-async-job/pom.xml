@@ -5,11 +5,13 @@
     <parent>
         <artifactId>hsweb-concurrent</artifactId>
         <groupId>org.hswebframework.web</groupId>
-        <version>3.0.0-RC-SNAPSHOT</version>
+        <version>3.0.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hsweb-concurrent-async-job</artifactId>
+
+    <description>支持事务的异步任务</description>
 
     <dependencies>
         <dependency>

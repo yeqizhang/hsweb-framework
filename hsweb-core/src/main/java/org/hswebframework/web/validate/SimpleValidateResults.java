@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -22,16 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author zhouhao
  */
 public class SimpleValidateResults implements ValidateResults {
 
-    private static final long serialVersionUID = -3355828475840578917L;
-    private List<ValidateResults.Result> results = new ArrayList<>();
+    private static final long                         serialVersionUID = -3355828475840578917L;
+    private              List<ValidateResults.Result> results          = new ArrayList<>();
 
     public SimpleValidateResults addResult(String field, String message) {
         results.add(new Result(field, message));
+        return this;
+    }
+
+    public SimpleValidateResults addResult(ValidateResults.Result result) {
+        results.add(result);
         return this;
     }
 
@@ -46,9 +50,9 @@ public class SimpleValidateResults implements ValidateResults {
     }
 
     class Result implements ValidateResults.Result {
-        private static final long serialVersionUID = -4717219071013488363L;
-        private String field;
-        private String message;
+        private static final long   serialVersionUID = -4717219071013488363L;
+        private              String field;
+        private              String message;
 
         public Result(String field, String message) {
             this.field = field;

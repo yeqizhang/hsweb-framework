@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public interface SimpleCrudController<E, PK, Q extends Entity>
         extends QueryController<E, PK, Q>
         , UpdateController<E, PK, E>
         , CreateController<E, PK, E>
-        , DeleteController<PK> {
+        , DeleteController<E,PK> {
 
     @Override
     @SuppressWarnings("unchecked")

@@ -1,7 +1,10 @@
 package org.hswebframework.web.datasource.switcher;
 
+import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -41,4 +44,28 @@ public class DefaultDataSourceSwitcherTest {
 
     }
 
+    @Test
+    public void testChangeSwitcher2() {
+
+        switcher.use("test");//切换为test
+        assertEquals(switcher.currentDataSourceId(), "test");
+        switcher.useDefault();
+        switcher.useDefault();
+        switcher.useDefault();
+        assertTrue(switcher.currentDataSourceId() == null);
+        switcher.useLast();
+        switcher.useLast();
+        switcher.useLast();
+        assertEquals(switcher.currentDataSourceId(), "test");
+    }
+
+    public class Test2 extends TestClass {
+
+    }
+
+    public class TestClass {
+        public void test() {
+
+        }
+    }
 }

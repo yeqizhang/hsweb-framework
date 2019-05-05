@@ -29,13 +29,13 @@ public class DefaultAopMethodAuthorizeDefinitionParser implements AopMethodAutho
 
     private Map<CacheKey, AuthorizeDefinition> cache = new ConcurrentHashMap<>();
 
-    private List<AopMethodAuthorizeDefinitionCustomizerParser> parserCustomers;
+    private List<AopMethodAuthorizeDefinitionCustomizerParser> parserCustomizers;
 
     private static Set<String> excludeMethodName = new HashSet<>(Arrays.asList("toString", "clone", "hashCode", "getClass"));
 
     @Autowired(required = false)
-    public void setParserCustomers(List<AopMethodAuthorizeDefinitionCustomizerParser> parserCustomers) {
-        this.parserCustomers = parserCustomers;
+    public void setParserCustomizers(List<AopMethodAuthorizeDefinitionCustomizerParser> parserCustomizers) {
+        this.parserCustomizers = parserCustomizers;
     }
 
     @Override
@@ -59,9 +59,9 @@ public class DefaultAopMethodAuthorizeDefinitionParser implements AopMethodAutho
             return definition;
         }
         //使用自定义
-        if (!CollectionUtils.isEmpty(parserCustomers)) {
-            definition = parserCustomers.stream()
-                    .map(customer -> customer.parse(target, method, context))
+        if (!CollectionUtils.isEmpty(parserCustomizers)) {
+            definition = parserCustomizers.stream()
+                    .map(customizer -> customizer.parse(target, method, context))
                     .filter(Objects::nonNull)
                     .findAny().orElse(null);
             if (definition instanceof EmptyAuthorizeDefinition) {
@@ -89,50 +89,50 @@ public class DefaultAopMethodAuthorizeDefinitionParser implements AopMethodAutho
             cache.put(key, EmptyAuthorizeDefinition.instance);
             return null;
         }
-        DefaultBasicAuthorizeDefinition authorizeDefinition = new DefaultBasicAuthorizeDefinition();
-        authorizeDefinition.setTargetClass(target);
-        authorizeDefinition.setTargetMethod(method);
-        if (methodAuth == null || methodAuth.merge()) {
-            authorizeDefinition.put(classAuth);
-        }
+        synchronized (cache) {
+            DefaultBasicAuthorizeDefinition authorizeDefinition = new DefaultBasicAuthorizeDefinition();
+            authorizeDefinition.setTargetClass(target);
+            authorizeDefinition.setTargetMethod(method);
+            if (methodAuth == null || methodAuth.merge()) {
+                authorizeDefinition.put(classAuth);
+            }
 
-        authorizeDefinition.put(methodAuth);
+            authorizeDefinition.put(methodAuth);
 
-        authorizeDefinition.put(expression);
+            authorizeDefinition.put(expression);
 
-        if (methodAuth != null) {
-            authorizeDefinition.put(methodAuth.dataAccess());
-        }
-        authorizeDefinition.put(classDataAccess);
+            authorizeDefinition.put(classDataAccess);
 
-        authorizeDefinition.put(methodDataAccess);
+            authorizeDefinition.put(methodDataAccess);
 
-        if (authorizeDefinition.getPermissionDescription().length == 0) {
-            if (classAuth != null) {
-                String[] desc = classAuth.description();
-                if (desc.length > 0) {
-                    authorizeDefinition.setPermissionDescription(desc);
+            if (authorizeDefinition.getPermissionDescription().length == 0) {
+                if (classAuth != null) {
+                    authorizeDefinition.put(classAuth.dataAccess());
+                    String[] desc = classAuth.description();
+                    if (desc.length > 0) {
+                        authorizeDefinition.setPermissionDescription(desc);
+                    }
                 }
             }
-        }
 
-        if (authorizeDefinition.getActionDescription().length == 0) {
-            if (methodAuth != null) {
-                if (methodAuth.description().length != 0) {
-                    authorizeDefinition.setActionDescription(methodAuth.description());
+            if (authorizeDefinition.getActionDescription().length == 0) {
+                if (methodAuth != null) {
+                    if (methodAuth.description().length != 0) {
+                        authorizeDefinition.setActionDescription(methodAuth.description());
+                    }
                 }
             }
-        }
 
-        log.info("parsed authorizeDefinition {}.{} => {}.{} permission:{} actions:{}",
-                target.getSimpleName(),
-                method.getName(),
-                authorizeDefinition.getPermissionDescription(),
-                authorizeDefinition.getActionDescription(),
-                authorizeDefinition.getPermissions(),
-                authorizeDefinition.getActions());
-        cache.put(key, authorizeDefinition);
-        return authorizeDefinition;
+            log.info("parsed authorizeDefinition {}.{} => {}.{} permission:{} actions:{}",
+                    target.getSimpleName(),
+                    method.getName(),
+                    authorizeDefinition.getPermissionDescription(),
+                    authorizeDefinition.getActionDescription(),
+                    authorizeDefinition.getPermissions(),
+                    authorizeDefinition.getActions());
+            cache.put(key, authorizeDefinition);
+            return authorizeDefinition;
+        }
     }
 
     public CacheKey buildCacheKey(Class target, Method method) {

@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -61,10 +61,10 @@ public class MybatisProperties extends org.mybatis.spring.boot.autoconfigure.Myb
      */
     private              boolean  useJpa                 = true;
 
-    private List<MybatisMapperCustomer> mybatisMappers;
+    private List<MybatisMapperCustomizer> mybatisMappers;
 
     @Autowired(required = false)
-    public void setMybatisMappers(List<MybatisMapperCustomer> mybatisMappers) {
+    public void setMybatisMappers(List<MybatisMapperCustomizer> mybatisMappers) {
         this.mybatisMappers = mybatisMappers;
     }
 
@@ -107,7 +107,7 @@ public class MybatisProperties extends org.mybatis.spring.boot.autoconfigure.Myb
 
         if (mybatisMappers != null) {
             mybatisMappers.stream()
-                    .map(MybatisMapperCustomer::getIncludes)
+                    .map(MybatisMapperCustomizer::getIncludes)
                     .flatMap(Arrays::stream)
                     .forEach(locations::add);
         }
@@ -125,7 +125,7 @@ public class MybatisProperties extends org.mybatis.spring.boot.autoconfigure.Myb
         Set<String> excludes = new HashSet<>();
         if (mybatisMappers != null) {
             mybatisMappers.stream()
-                    .map(MybatisMapperCustomer::getExcludes)
+                    .map(MybatisMapperCustomizer::getExcludes)
                     .flatMap(Arrays::stream)
                     .forEach(excludes::add);
         }

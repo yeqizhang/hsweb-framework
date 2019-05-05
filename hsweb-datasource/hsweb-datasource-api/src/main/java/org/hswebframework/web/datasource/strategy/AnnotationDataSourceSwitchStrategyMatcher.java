@@ -3,16 +3,25 @@ package org.hswebframework.web.datasource.strategy;
 import org.hswebframework.web.AopUtils;
 import org.hswebframework.web.datasource.annotation.UseDataSource;
 import org.hswebframework.web.datasource.annotation.UseDefaultDataSource;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author zhouhao
  * @since 3.0.0-RC
  */
 public class AnnotationDataSourceSwitchStrategyMatcher extends CachedDataSourceSwitchStrategyMatcher {
+    static final Set<String> ignoreMethod = new HashSet<>(Arrays.asList("toString", "clone", "equals"));
+
     @Override
     public Strategy createStrategyIfMatch(Class target, Method method) {
+        if (ignoreMethod.contains(method.getName())) {
+            return null;
+        }
         UseDataSource useDataSource = AopUtils.findAnnotation(target, method, UseDataSource.class);
         UseDefaultDataSource useDefaultDataSource = AopUtils.findAnnotation(target, method, UseDefaultDataSource.class);
 
@@ -37,6 +46,11 @@ public class AnnotationDataSourceSwitchStrategyMatcher extends CachedDataSourceS
                 @Override
                 public String toString() {
                     return "Annotation Strategy(" + (useDataSource != null ? useDataSource : useDefaultDataSource) + ")";
+                }
+
+                @Override
+                public String getDatabase() {
+                    return useDataSource == null ? null : StringUtils.isEmpty(useDataSource.database()) ? null : useDataSource.database();
                 }
             };
         }

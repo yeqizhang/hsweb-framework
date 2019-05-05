@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -30,19 +30,19 @@ var versions = [
     {
         version: "3.0.0",
         upgrade: function (context) {
-            java.lang.System.out.println("更新到3.0.2了");
+            java.lang.System.out.println("更新到3.0.0了");
         }
     },
     {
         version: "3.0.1",
         upgrade: function (context) {
-            java.lang.System.out.println("更新到3.0.2了");
+            java.lang.System.out.println("更新到3.0.1了");
         }
     },
     {
         version: "3.0.2",
         upgrade: function (context) {
-            java.lang.System.out.println("更新到3.0.1了");
+            java.lang.System.out.println("更新到3.0.2了");
         }
     }
 ];
@@ -61,6 +61,20 @@ function install(context) {
         .addColumn().name("creator_id").varchar(32).comment("创建者ID").commit()
         .addColumn().name("create_time").number(32).notNull().comment("创建时间").commit()
         .comment("用户表").commit();
+
+    database.createOrAlter("s_user_test")
+        .addColumn().name("u_id").varchar(32).notNull().primaryKey().comment("uid").commit()
+        .addColumn().name("name").varchar(128).notNull().comment("姓名").commit()
+        .addColumn().name("username").varchar(128).notNull().comment("用户名").commit()
+        .addColumn().name("password").varchar(128).notNull().comment("密码").commit()
+        .addColumn().name("salt").varchar(128).notNull().comment("密码盐").commit()
+        .addColumn().name("status").number(4).notNull().comment("用户状态").commit()
+        .addColumn().name("last_login_ip").varchar(128).comment("上一次登录的ip地址").commit()
+        .addColumn().name("last_login_time").number(32).comment("上一次登录时间").commit()
+        .addColumn().name("creator_id").varchar(32).comment("创建者ID").commit()
+        .addColumn().name("create_time").number(32).notNull().comment("创建时间").commit()
+        .comment("测试用户表").commit();
+
     java.lang.System.out.println("安装了");
 }
 

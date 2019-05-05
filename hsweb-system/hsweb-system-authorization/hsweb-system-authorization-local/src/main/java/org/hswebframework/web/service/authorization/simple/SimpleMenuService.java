@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016 http://www.hswebframework.org
+ *  Copyright 2019 http://www.hswebframework.org
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ public class SimpleMenuService
 
     @Override
     @CacheEvict(cacheNames = {CacheConstants.MENU_CACHE_NAME, CacheConstants.USER_MENU_CACHE_NAME}, allEntries = true)
-    public int deleteByPk(String id) {
+    public MenuEntity deleteByPk(String id) {
         return super.deleteByPk(id);
     }
 }

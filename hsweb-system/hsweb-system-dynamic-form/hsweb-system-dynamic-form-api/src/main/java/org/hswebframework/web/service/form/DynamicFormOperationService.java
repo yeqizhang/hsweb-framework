@@ -24,13 +24,16 @@ public interface DynamicFormOperationService {
 
     <T> int update(String formId, UpdateParamEntity<T> paramEntity);
 
-    <T> T updateById(String formId, String id, T data);
+    <T> T updateById(String formId, Object id, T data);
 
-    <T> void insert(String formId, T entity);
+    <T> T insert(String formId, T entity);
 
     int delete(String formId, DeleteParamEntity paramEntity);
 
-    int deleteById(String formId, String id);
+    int deleteById(String formId, Object id);
 
+    <T> T saveOrUpdate(String formId, T data);
+
+    <T> T selectById(String formId, Object id);
 
 }

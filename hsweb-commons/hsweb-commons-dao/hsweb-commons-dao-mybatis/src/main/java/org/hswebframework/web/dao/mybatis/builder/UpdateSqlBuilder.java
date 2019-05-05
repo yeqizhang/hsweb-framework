@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ public class UpdateSqlBuilder extends SimpleUpdateSqlRender {
     public UpdateSqlBuilder(Dialect dialect) {
         super(dialect);
     }
+
     @Override
     public SQL render(RDBTableMetaData metaData, UpdateParam param) {
         RDBTableMetaData metaDataNew = metaData.clone();
@@ -44,10 +45,15 @@ public class UpdateSqlBuilder extends SimpleUpdateSqlRender {
                 .forEach(metaDataNew::removeColumn);
         return super.render(metaDataNew, param);
     }
+
     @Override
     protected SqlAppender getParamString(String paramName, RDBColumnMetaData rdbColumnMetaData) {
+        String typeHandler = rdbColumnMetaData.getProperty("typeHandler")
+                .getValue();
+
         return new SqlAppender().add("#{", paramName,
                 ",javaType=", EasyOrmSqlBuilder.getJavaType(rdbColumnMetaData.getJavaType()),
-                ",jdbcType=", rdbColumnMetaData.getJdbcType(), "}");
+                ",jdbcType=", rdbColumnMetaData.getJdbcType(),
+                typeHandler != null ? ",typeHandler=" + typeHandler : "", "}");
     }
 }

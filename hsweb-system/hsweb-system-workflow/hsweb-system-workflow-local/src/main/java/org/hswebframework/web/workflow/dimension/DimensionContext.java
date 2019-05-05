@@ -20,13 +20,13 @@ public class DimensionContext {
      */
     private String creatorId;
 
+    private String processDefineId;
+
+    private String activityId;
+
     /**
      * 当前环节
      */
-    private TaskInfo currentTask;
+    private TaskInfo task;
 
-    /**
-     * 上一环节
-     */
-    private TaskInfo preTask;
 }

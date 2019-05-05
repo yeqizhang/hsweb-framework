@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2016 http://www.hswebframework.org
+ *  * Copyright 2019 http://www.hswebframework.org
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.hswebframework.web.dao.dynamic.DeleteByEntityDao;
 /**
  * @author zhouhao
  */
-public interface DefaultDSLDeleteService<PK> extends DefaultDeleteService<PK> {
+public interface DefaultDSLDeleteService<E, PK> extends DefaultDeleteService<E, PK> {
     DeleteByEntityDao getDao();
 
     default Delete<DeleteParamEntity> createDelete() {

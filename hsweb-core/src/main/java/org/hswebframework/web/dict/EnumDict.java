@@ -79,7 +79,9 @@ public interface EnumDict<V> extends JSONSerializable {
         if (v instanceof Collection) {
             return ((Collection) v).stream().anyMatch(this::eq);
         }
-        v = ((Map) v).getOrDefault("value", ((Map) v).get("text"));
+        if (v instanceof Map) {
+            v = ((Map) v).getOrDefault("value", ((Map) v).get("text"));
+        }
         return this == v
                 || getValue() == v
                 || getValue().equals(v)
@@ -92,6 +94,10 @@ public interface EnumDict<V> extends JSONSerializable {
 
     default boolean in(long mask) {
         return (mask & getMask()) != 0;
+    }
+
+    default boolean in(EnumDict<V>... dict) {
+        return in(toMask(dict));
     }
 
     /**
@@ -161,6 +167,20 @@ public interface EnumDict<V> extends JSONSerializable {
         return value;
     }
 
+
+    @SafeVarargs
+    static <T extends Enum & EnumDict> boolean in(T target, T... t) {
+        Enum[] all = target.getClass().getEnumConstants();
+
+        if (all.length >= 64) {
+            List<T> list = Arrays.asList(t);
+            return Arrays.stream(all)
+                    .map(EnumDict.class::cast)
+                    .anyMatch(list::contains);
+        }
+        return maskIn(toMask(t), target);
+    }
+
     @SafeVarargs
     static <T extends EnumDict> boolean maskIn(long mask, T... t) {
         long value = toMask(t);
@@ -187,8 +207,8 @@ public interface EnumDict<V> extends JSONSerializable {
         return arr;
     }
 
-    static <T extends EnumDict> List<T> getByMask(Supplier<List<T>> allOptionsSuppiler, long mask) {
-        return getByMask(allOptionsSuppiler.get(), mask);
+    static <T extends EnumDict> List<T> getByMask(Supplier<List<T>> allOptionsSupplier, long mask) {
+        return getByMask(allOptionsSupplier.get(), mask);
     }
 
 

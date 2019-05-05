@@ -19,6 +19,7 @@
         <result property="dictConfig" column="dict_config" javaType="String" jdbcType="CLOB"/>
         <result property="sortIndex" column="sort_index" javaType="Long" jdbcType="DECIMAL"/>
         <result property="properties" column="properties" javaType="java.util.Map" jdbcType="CLOB"/>
+        <result property="validator" column="validator" javaType="java.util.List" jdbcType="CLOB"/>
     </resultMap>
 
     <!--用于动态生成sql所需的配置-->
@@ -28,12 +29,13 @@
     </sql>
 
     <insert id="insert" parameterType="org.hswebframework.web.entity.form.DynamicFormColumnEntity">
-        <include refid="config"/>
+        <include refid="config"/> <include refid="BasicMapper.switcher"/>
         <include refid="BasicMapper.buildInsertSql"/>
     </insert>
 
     <delete id="deleteByPk" parameterType="String">
-        delete from s_dyn_form_column where u_id =#{id}
+        <include refid="config"/>
+        delete from ${_fullTableName} where u_id =#{id}
     </delete>
 
     <delete id="delete" parameterType="org.hswebframework.web.commons.entity.Entity">

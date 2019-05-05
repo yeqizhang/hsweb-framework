@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016 http://www.hswebframework.org
+ *  Copyright 2019 http://www.hswebframework.org
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -81,7 +81,6 @@ public class MethodInterceptorHolder {
 
     public MethodInterceptorHolder(String id, Method method, Object target, Map<String, Object> args) {
         Objects.requireNonNull(id);
-        Objects.requireNonNull(id);
         Objects.requireNonNull(method);
         Objects.requireNonNull(target);
         Objects.requireNonNull(args);
@@ -142,7 +141,7 @@ public class MethodInterceptorHolder {
                 if (args == null) {
                     return Optional.empty();
                 }
-                return Optional.of((T) args.get(name));
+                return Optional.ofNullable((T) args.get(name));
             }
 
             @Override

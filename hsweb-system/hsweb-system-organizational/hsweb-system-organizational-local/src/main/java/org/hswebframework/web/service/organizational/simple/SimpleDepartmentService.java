@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016 http://www.hswebframework.org
+ *  Copyright 2019 http://www.hswebframework.org
  *  
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ public class SimpleDepartmentService
     @Cacheable(key = "'org-ids:'+#orgId==null?0:orgId.hashCode()+'_'+#children+'_'+#parent")
     public List<DepartmentEntity> selectByOrgIds(List<String> orgId, boolean children, boolean parent) {
         if (CollectionUtils.isEmpty(orgId)) {
-            return Collections.emptyList();
+            return new java.util.ArrayList<>();
         }
         Set<String> allOrgId = new HashSet<>(orgId);
 
@@ -122,7 +122,7 @@ public class SimpleDepartmentService
     }
 
     @Override
-    public int deleteByPk(String id) {
+    public DepartmentEntity deleteByPk(String id) {
         if (DefaultDSLQueryService.createQuery(positionDao)
                 .where(PositionEntity.departmentId, id)
                 .total() > 0) {

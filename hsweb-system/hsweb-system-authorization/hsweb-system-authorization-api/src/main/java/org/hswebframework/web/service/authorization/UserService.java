@@ -24,6 +24,17 @@ public interface UserService extends
         InsertService<UserEntity, String> {
 
     /**
+     * 新增用户
+     *
+     * @param data 要添加的数据
+     * @return 用户id
+     * @see org.hswebframework.web.service.authorization.events.UserCreatedEvent
+     * @see BindRoleUserEntity
+     */
+    @Override
+    String insert(UserEntity data);
+
+    /**
      * 启用用户
      *
      * @param userId 用户Id
@@ -71,7 +82,7 @@ public interface UserService extends
      *
      * @param plainUsername 用户名,区分大小写,不能为空
      * @param plainPassword 明文密码,区分大小写,不能为空
-     * @return 用户信息, 如果用户米或者密码错误, 则返回<code>null</code>
+     * @return 用户信息, 如果用户名或者密码错误, 则返回<code>null</code>
      * @see PasswordEncoder
      */
     UserEntity selectByUserNameAndPassword(String plainUsername, String plainPassword);

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016 http://www.hswebframework.org
+ *  Copyright 2019 http://www.hswebframework.org
  *  
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class SimplePositionService extends EnableCacheAllEvictTreeSortService<Po
 
     @Override
     @CacheEvict(allEntries = true)
-    public int deleteByPk(String id) {
+    public PositionEntity deleteByPk(String id) {
         if (!CollectionUtils.isEmpty(personDao.selectByPositionId(id))) {
             throw new BusinessException("岗位中还有人员,无法删除!");
         }

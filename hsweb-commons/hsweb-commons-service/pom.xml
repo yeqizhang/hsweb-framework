@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ /*
-  ~  * Copyright 2016 http://www.hswebframework.org
+  ~  * Copyright 2019 http://www.hswebframework.org
   ~  *
   ~  * Licensed under the Apache License, Version 2.0 (the "License");
   ~  * you may not use this file except in compliance with the License.
@@ -23,11 +23,13 @@
     <parent>
         <artifactId>hsweb-commons</artifactId>
         <groupId>org.hswebframework.web</groupId>
-        <version>3.0.0-RC-SNAPSHOT</version>
+        <version>3.0.8</version>
 
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+
+    <description>通用增删改查-通用服务模块</description>
 
     <artifactId>hsweb-commons-service</artifactId>
     <packaging>pom</packaging>
